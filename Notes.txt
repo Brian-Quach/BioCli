@@ -1,0 +1,35 @@
+Node:
+    -Api to take "Commands" and return output
+    -Webpage will be created w/ html/css/js >>> This way I can listen for stuff like TAB
+    -Figure out best way to append/remove data to cli emulator in a way that looks natural?
+        -Have big div to represent emulated cli
+        -lines are shown w/ vertically stacked divs
+        -Each 'output' is displayed as a div appended to bottom of stack
+        -remove div once it leaves viewpoint? OR make it scrollable?!? 
+        
+        
+Database (Mysql?):
+    -Store resume data so it can be dynamically pulled&formatted in responses
+    
+    
+Reqs:
+    -sexy af.
+    -responsive af.
+    -easy enough to use, i guess
+ 
+ 
+?!?:
+    Full screen? Or should I do like some ui, have a "screen" inside the page?
+    Also, cli commands?
+        help [command]
+        about
+        show [-s <section>] [-p <project>] [-f]
+        send <from> <subject> <message>
+        restart
+        exit
+        [colour [-t <text_colour>] [-b <background_colour>]]
+        [play <tetris/galaga/pong>] 
+        
+        
+        
+ Typed.js - https://mattboldt.com/demos/typed-js/

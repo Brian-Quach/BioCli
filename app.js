@@ -20,4 +20,6 @@ app.use(function (req, res, next){
 });
 
 const PORT = 3000;
-app.listen(PORT);
+app.listen(PORT, () =>{
+    console.log("Started server on port", PORT);
+});
