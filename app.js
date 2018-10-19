@@ -12,6 +12,13 @@ app.use(express.static('static'));
 //     res.send('Hello World')
 // });
 
+app.get('/cli/command/', function (req, res){
+    let cmd = req.body.cmd;
+
+
+    return res.json("hello world!");
+});
+
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);
     next();
