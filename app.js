@@ -12,6 +12,10 @@ app.use(express.static('static'));
 //     res.send('Hello World')
 // });
 
+app.get('/api/cmd/', function (req, res) {
+    return res.json("hello world!");
+});
+
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);
     next();
