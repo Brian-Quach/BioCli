@@ -12,7 +12,8 @@ app.use(express.static('static'));
 //     res.send('Hello World')
 // });
 
-app.get('/api/cmd/', function (req, res) {
+app.get('/cli/command/', function (req, res){
+    let cmd = req.body.cmd;
     return res.json("hello world!");
 });
 
