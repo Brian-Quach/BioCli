@@ -4,6 +4,8 @@ cmdIn.addEventListener("blur", function() {
     cmdIn.focus();
 }, true);
 
+let ctrlDown = false;
+
 cmdIn.addEventListener('keydown', function (e) {
     let key = e.which || e.keyCode;
     if (key === 13) { // Enter
@@ -16,14 +18,20 @@ cmdIn.addEventListener('keydown', function (e) {
     } else if (key === 9) {  // Tab
         e.preventDefault();
         console.log("Tab");
+    } else if (key === 17) { // Ctrl
+        e.preventDefault();
+        ctrlDown = true;
+    } else if (key === 67) { // C
+        if (ctrlDown){
+            console.log("Ctrl + C");
+        }
     }
 });
 
-function cHandler(e) {
-    e.preventDefault();
+cmdIn.addEventListener('keyup', function (e) {
     let key = e.which || e.keyCode;
-    if (key === 67) { // c
-        console.log("Ctrl + C");
+    if (key === 17) {
+        e.preventDefault();
+        ctrlDown = false;
     }
-
-}
+})
