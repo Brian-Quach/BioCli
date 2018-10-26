@@ -16,9 +16,6 @@ cmdIn.addEventListener('keydown', function (e) {
     } else if (key === 9) {  // Tab
         e.preventDefault();
         console.log("Tab");
-    } else if (key === 18) { // Ctrl - Not working (TODO)
-        e.preventDefault();
-        console.log("Ctrl");
     }
 });
 
