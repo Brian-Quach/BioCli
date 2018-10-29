@@ -9,7 +9,6 @@ cmdIn.addEventListener("blur", function() {
     cmdIn.focus();
 }, true);
 
-
 cmdIn.addEventListener('keydown', function (e) {
     let key = e.which || e.keyCode;
     if (key === 13) { // Enter
@@ -19,7 +18,6 @@ cmdIn.addEventListener('keydown', function (e) {
         console.log("Up");
     } else if (key === 40) { // Down
         console.log("Down");
-        printLine("test");
     } else if (key === 9) {  // Tab
         e.preventDefault();
         console.log("Tab");
@@ -59,6 +57,7 @@ function printLine(text){
     newLine.appendChild(lineText);
 
     cmdOut.appendChild(newLine);
+    window.scrollTo(0,document.body.scrollHeight);
 }
 
 function typeLine(text){
@@ -74,11 +73,18 @@ function typeLine(text){
         strings: [text],
         typeSpeed: 30,
         loop: false,
-        cursorChar: '',
+        cursorChar: '_',
         onComplete: function(self) {
+            self.cursor.innerHTML = '';
             printLine(cmdIn.value);
             cmdIn.value = "";
         },
     });
+    window.scrollTo(0,document.body.scrollHeight);
+}
 
+function userLogin(newUser = "guest") {
+    let inPrompt = document.getElementById("prompt");
+
+    inPrompt.textContent = newUser + "@briiquach.com:~$";
 }

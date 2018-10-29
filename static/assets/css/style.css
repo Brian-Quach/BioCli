@@ -6,5 +6,24 @@ body {
     font-family: 'Inconsolata', monospace;
 }
 
-#cmd_in {
+#input {
+    white-space: nowrap;
 }
+
+#prompt {
+    display: inline-block;
+}
+
+#cmd_in {
+    display: inline-block;
+    width:90%;
+    background-color: transparent;
+    border: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
+}
+#cmd_in:focus, #cmd_in:focus, *:focus{
+     outline: none;
+ }
