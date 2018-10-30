@@ -12,7 +12,8 @@ cmdIn.addEventListener("blur", function() {
 cmdIn.addEventListener('keydown', function (e) {
     let key = e.which || e.keyCode;
     if (key === 13) { // Enter
-        printLine(cmdIn.value);
+        console.log("Enter");
+        processCommand(cmdIn.value);
         cmdIn.value = "";
     } else if (key === 38) { // Up
         console.log("Up");
@@ -51,9 +52,15 @@ function createTextSpan(type, text){
 }
 
 
-function printLine(text){
+function processCommand(input){
+    let currPrompt = document.getElementById("prompt");
+    printLine("userInput", currPrompt.textContent + " " + input);
+    printLine("systemOutput", input);
+}
+
+function printLine(format, text){
     let newLine = document.createElement("div");
-    let lineText = createTextSpan("output", text);
+    let lineText = createTextSpan(format, text);
     newLine.appendChild(lineText);
 
     cmdOut.appendChild(newLine);
@@ -76,7 +83,7 @@ function typeLine(text){
         cursorChar: '_',
         onComplete: function(self) {
             self.cursor.innerHTML = '';
-            printLine(cmdIn.value);
+            printLine("systemOutput",cmdIn.value);
             cmdIn.value = "";
         },
     });

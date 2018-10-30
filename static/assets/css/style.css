@@ -12,6 +12,22 @@ body {
 
 #prompt {
     display: inline-block;
+    color: #25df9a;
+}
+#cmd_in:focus {
+    color: #25df9a;
+}
+.userInput {
+    color: #25df9a;
+}
+.systemOutput{
+    color: aliceblue;
+}
+.systemError{
+    color: #cc0000;
+}
+.systemMessage{
+    color: #aaaaaa;
 }
 
 #cmd_in {
