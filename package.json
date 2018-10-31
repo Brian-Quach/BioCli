@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Brian-Quach/BioCli#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "npm": "^6.4.1",
     "typed.js": "^2.0.9"
   }
 }
