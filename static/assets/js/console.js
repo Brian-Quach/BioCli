@@ -1,9 +1,28 @@
 let ctrlDown = false;
 let outputCount = 0;
+let isPrompt = true;
 
 cmdIn = document.getElementById('cmd_in');
 cmdOut = document.getElementById('output');
 
+function send(method, url, data, callback){
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        if (xhr.status !== 200) callback("[" + xhr.status + "] " + xhr.responseText, null);
+        else callback(null, JSON.parse(xhr.responseText));
+    };
+    xhr.open(method, url, true);
+    if (!data) xhr.send();
+    else{
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(data));
+    }
+}
+
+function ConsoleInput(type, value) {
+    this.inputType = type;
+    this.inputValue = value;
+}
 
 cmdIn.addEventListener("blur", function() {
     cmdIn.focus();
@@ -12,7 +31,6 @@ cmdIn.addEventListener("blur", function() {
 cmdIn.addEventListener('keydown', function (e) {
     let key = e.which || e.keyCode;
     if (key === 13) { // Enter
-        console.log("Enter");
         processCommand(cmdIn.value);
         cmdIn.value = "";
     } else if (key === 38) { // Up
@@ -32,7 +50,6 @@ cmdIn.addEventListener('keydown', function (e) {
     }
 });
 
-
 cmdIn.addEventListener('keyup', function (e) {
     let key = e.which || e.keyCode;
     if (key === 17) {
@@ -40,6 +57,16 @@ cmdIn.addEventListener('keyup', function (e) {
         ctrlDown = false;
     }
 });
+
+//TODO - Startup
+welcomeMessage();
+
+
+function welcomeMessage(){
+    typeLine("Hello there!!");
+
+    isPrompt = false;
+}
 
 function createTextSpan(type, text){
     let newElement = document.createElement("span");
@@ -55,7 +82,15 @@ function createTextSpan(type, text){
 function processCommand(input){
     let currPrompt = document.getElementById("prompt");
     printLine("userInput", currPrompt.textContent + " " + input);
-    printLine("systemOutput", input);
+
+    let newInput = new ConsoleInput("cmd", input);
+
+    console.log(newInput);
+
+    send("POST", "/cli/sendCmd/", newInput, function(err, sysOut){
+        if (err) printLine("systemError", err);
+        if (!sysOut.isPrompt) printLine(sysOut.resStatus, sysOut.textOutput);
+    });
 }
 
 function printLine(format, text){
