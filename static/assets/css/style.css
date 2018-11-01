@@ -4,6 +4,7 @@ body {
     background-color: black;
     color: aliceblue;
     font-family: 'Inconsolata', monospace;
+    font-size: 3vh;
 }
 
 #input {
