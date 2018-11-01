@@ -69,7 +69,8 @@ function welcomeMessage(){
     "*Testing multi-line messages*",
     "FYI - you can use CTRL+C to end this early (Assuming it works)",
     "So yeahh.. currently, this doesn't do anything.",
-    "It just repeats whatever you send, but capitalized!"]);
+    "It just repeats whatever you send, but capitalized!",
+    "Go ahead and type something:"]);
     cmdIn.focus();
 }
 
