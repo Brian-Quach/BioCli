@@ -6,10 +6,10 @@ module.exports = function(app){
         this.isPrompt = isPrompt;
     }
 
-    app.post('/cli/sendCmd/', function (req, res, next){
+    app.post('/cli/sendCmd/', function (req, res){
         //TODO: Create non-standard return types
         let input = req.body;
-        let returnString = "You sent: " + input.inputValue + " as a " + input.inputType + "!";
+        let returnString = input.inputValue.toUpperCase();
         let output = new ConsoleOut(returnString, "systemOutput", false);
         return res.json(output);
     });

@@ -6,9 +6,7 @@ app.use(bodyParser.json());
 
 app.use(express.static('static'));
 
-
 require('./routes/commands')(app);
-
 
 app.use(function (req, res, next){
     console.log("HTTP request", req.method, req.url, req.body);

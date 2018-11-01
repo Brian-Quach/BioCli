@@ -8,6 +8,7 @@ body {
 
 #input {
     white-space: nowrap;
+    overflow: hidden;
 }
 
 #prompt {
@@ -32,7 +33,7 @@ body {
 
 #cmd_in {
     display: inline-block;
-    width:90%;
+    width:70%;
     background-color: transparent;
     border: 0;
     color: inherit;
@@ -43,3 +44,7 @@ body {
 #cmd_in:focus, #cmd_in:focus, *:focus{
      outline: none;
  }
+
+.hidden{
+    display: none;
+}

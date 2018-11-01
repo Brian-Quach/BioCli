@@ -1,6 +1,7 @@
 let ctrlDown = false;
 let outputCount = 0;
 let isPrompt = true;
+let currTyping = null;
 
 cmdIn = document.getElementById('cmd_in');
 cmdOut = document.getElementById('output');
@@ -28,7 +29,7 @@ cmdIn.addEventListener("blur", function() {
     cmdIn.focus();
 }, true);
 
-cmdIn.addEventListener('keydown', function (e) {
+document.addEventListener('keydown', function (e) {
     let key = e.which || e.keyCode;
     if (key === 13) { // Enter
         processCommand(cmdIn.value);
@@ -46,11 +47,12 @@ cmdIn.addEventListener('keydown', function (e) {
     } else if (key === 67) { // C
         if (ctrlDown){
             console.log("Ctrl + C");
+            quickEscape();
         }
     }
 });
 
-cmdIn.addEventListener('keyup', function (e) {
+document.addEventListener('keyup', function (e) {
     let key = e.which || e.keyCode;
     if (key === 17) {
         e.preventDefault();
@@ -63,9 +65,12 @@ welcomeMessage();
 
 
 function welcomeMessage(){
-    typeLine("Hello there!!");
-
-    isPrompt = false;
+    typedWelcome(["Hello there!! Welcome and stuff!! (This is a welcome message!!!)",
+    "*Testing multi-line messages*",
+    "FYI - you can use CTRL+C to end this early (Assuming it works)",
+    "So yeahh.. currently, this doesn't do anything.",
+    "It just repeats whatever you send, but capitalized!"]);
+    cmdIn.focus();
 }
 
 function createTextSpan(type, text){
@@ -85,7 +90,6 @@ function processCommand(input){
 
     let newInput = new ConsoleInput("cmd", input);
 
-    console.log(newInput);
 
     send("POST", "/cli/sendCmd/", newInput, function(err, sysOut){
         if (err) printLine("systemError", err);
@@ -102,24 +106,41 @@ function printLine(format, text){
     window.scrollTo(0,document.body.scrollHeight);
 }
 
-function typeLine(text){
+function typedWelcome(text) {
+    let strings = [];
+    let next = [];
+    if (text === undefined || text.length === 0) {
+        allowInput();
+        return;
+    }else if (text.constructor === String) {
+        strings = [text];
+        next = [];
+    } else if (text.constructor === Array) {
+        strings = text.slice(0, 1);
+        next = text.slice(1);
+    }
+
     let newLine = document.createElement("div");
     cmdOut.appendChild(newLine);
     let newSpan = document.createElement("span");
     newSpan.classList.add("output");
-    newSpan.id = "out-"+outputCount.toString();
+    newSpan.id = "out-" + outputCount.toString();
     outputCount++;
     newLine.appendChild(newSpan);
 
-    new Typed("#"+newSpan.id, {
-        strings: [text],
-        typeSpeed: 30,
+
+    currTyping = new Typed("#"+newSpan.id, {
+        strings: strings,
+        typeSpeed: 25,
         loop: false,
         cursorChar: '_',
         onComplete: function(self) {
             self.cursor.innerHTML = '';
-            printLine("systemOutput",cmdIn.value);
-            cmdIn.value = "";
+            currTyping = null;
+            setTimeout(function() {
+                typedWelcome(next);
+            }, 300);
+
         },
     });
     window.scrollTo(0,document.body.scrollHeight);
@@ -129,4 +150,31 @@ function userLogin(newUser = "guest") {
     let inPrompt = document.getElementById("prompt");
 
     inPrompt.textContent = newUser + "@briiquach.com:~$";
+}
+
+function quickEscape() {
+    if (currTyping != null){
+        currTyping.cursor.innerHTML = '';
+        currTyping.stop();
+        currTyping = null;
+    } else if (isPrompt = true){
+        //TODO: Stop whatever
+        isPrompt = false;
+    }
+    allowInput();
+}
+
+function allowInput() {
+    let inputDiv = document.getElementById("input");
+    if (inputDiv.classList.contains("hidden")) {
+        inputDiv.classList.remove("hidden");
+    }
+    cmdIn.focus();
+}
+
+function disableInput() {
+    let inputDiv = document.getElementById("input");
+    if (!inputDiv.classList.contains("hidden")){
+        inputDiv.classList.add("hidden");
+    }
 }
