@@ -41,7 +41,7 @@ cmdIn.addEventListener("blur", function() {
     cmdIn.focus();
 }, true);
 
-document.addEventListener('keydown', function (e) {
+cmdIn.addEventListener('keydown', function (e) {
     let key = e.which || e.keyCode;
     if (key === 13) { // Enter
         processCommand(cmdIn.value);
@@ -54,6 +54,19 @@ document.addEventListener('keydown', function (e) {
         e.preventDefault();
         console.log("Tab");
     } else if (key === 17) { // Ctrl
+        e.preventDefault();
+        ctrlDown = true;
+    } else if (key === 67) { // C
+        if (ctrlDown){
+            console.log("Ctrl + C");
+            quickEscape();
+        }
+    }
+});
+
+document.addEventListener('keydown', function (e) {
+    let key = e.which || e.keyCode;
+    if (key === 17) { // Ctrl
         e.preventDefault();
         ctrlDown = true;
     } else if (key === 67) { // C
