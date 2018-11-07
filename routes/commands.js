@@ -9,6 +9,7 @@ module.exports = function(app){
     app.post('/cli/sendCmd/', function (req, res){
         //TODO: Create non-standard return types
         let input = req.body;
+        console.log("Recieved:", input.command);
         let returnString = input.command.toUpperCase();
         let output = new ConsoleOut(returnString, "systemOutput", false);
         return res.json(output);

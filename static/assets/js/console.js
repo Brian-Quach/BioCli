@@ -7,7 +7,7 @@ cmdIn = document.getElementById('cmd_in');
 cmdOut = document.getElementById('output');
 
 function send(method, url, data, callback){
-    var xhr = new XMLHttpRequest();
+    let xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status !== 200) callback("[" + xhr.status + "] " + xhr.responseText, null);
         else callback(null, JSON.parse(xhr.responseText));
@@ -25,15 +25,10 @@ function ConsoleInput(type, input) {
     let params = input.split(" ");
     if (type === 'cmd'){
         this.command = params.shift();
-        this.args = {};
         this.params = params;
-        for (let i = 0; i < params.length; i+=2) {
-            alert(params[i]);
-            alert(params[i+1]);
-        }
     }
     else if (type === 'res'){
-
+        this.response = params.shift();
     }
 }
 
@@ -53,14 +48,6 @@ cmdIn.addEventListener('keydown', function (e) {
     } else if (key === 9) {  // Tab
         e.preventDefault();
         console.log("Tab");
-    } else if (key === 17) { // Ctrl
-        e.preventDefault();
-        ctrlDown = true;
-    } else if (key === 67) { // C
-        if (ctrlDown){
-            console.log("Ctrl + C");
-            quickEscape();
-        }
     }
 });
 
