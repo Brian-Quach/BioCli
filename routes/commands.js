@@ -10,11 +10,25 @@ module.exports = function(app){
         //TODO: Create non-standard return types
         let input = req.body;
         console.log("Recieved:", input.command);
-        let returnString = input.command.toUpperCase();
+        // TODO: check that "input.command" is a command
+
+        let returnString = commands[input.command].apply(null, input.params);
+
         let output = new ConsoleOut(returnString, "systemOutput", false);
         return res.json(output);
     });
 
+
+
+    let commands = {};
+
+    commands.help = function(command = null){
+        if (command === null){
+            return "This is a help text";
+        } else {
+            return "This is the help text for " + command;
+        }
+    }
 
 
 };
