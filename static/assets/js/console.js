@@ -20,9 +20,21 @@ function send(method, url, data, callback){
     }
 }
 
-function ConsoleInput(type, value) {
+function ConsoleInput(type, input) {
     this.inputType = type;
-    this.inputValue = value;
+    let params = input.split(" ");
+    if (type === 'cmd'){
+        this.command = params.shift();
+        this.args = {};
+        this.params = params;
+        for (let i = 0; i < params.length; i+=2) {
+            alert(params[i]);
+            alert(params[i+1]);
+        }
+    }
+    else if (type === 'res'){
+
+    }
 }
 
 cmdIn.addEventListener("blur", function() {
