@@ -10,11 +10,19 @@ module.exports = function(app){
         //TODO: Create non-standard return types
         let input = req.body;
         console.log("Recieved:", input.command);
-        // TODO: check that "input.command" is a command
 
-        let returnString = commands[input.command].apply(null, input.params);
+        let returnString, returnType;
 
-        let output = new ConsoleOut(returnString, "systemOutput", false);
+        if (Object.keys(commands).indexOf(input.command) > -1){
+            returnString = commands[input.command].apply(null, input.params);
+            returnType = "systemOutput";
+        } else {
+            returnString = "Command not found, use HELP to show available commands"
+            returnType = "systemError";
+        }
+
+        let output = new ConsoleOut(returnString, returnType, false);
+
         return res.json(output);
     });
 
@@ -28,6 +36,10 @@ module.exports = function(app){
         } else {
             return "This is the help text for " + command;
         }
+    }
+
+    commands.about = function(){
+        return "This is the about command!"
     }
 
 
