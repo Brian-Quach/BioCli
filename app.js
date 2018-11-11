@@ -7,17 +7,11 @@ app.use(bodyParser.json());
 app.use(express.static('static'));
 
 const mongoose = require('mongoose');
-//const mongoDb = 'mongodb://admin:password@briiquach.com:27020/profile'
-const mongoDb = 'mongodb://localhost:27017/profile'
+const mongoDb = 'mongodb://admin:password@briiquach.com:27020/profile'
+//const mongoDb = 'mongodb://localhost:27017/profile'
 
 mongoose.connect(mongoDb, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
-const database = mongoose.connection;
-
-database.on('error', console.error.bind(console, 'MongoDB connection error:'));
-database.once('open', function() {
-    console.log("Database Connection Established!");
-});
 
 require('./routes/commands')(app);
 

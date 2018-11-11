@@ -77,13 +77,11 @@ welcomeMessage();
 
 
 function welcomeMessage(){
-    typedWelcome(["Hello there!! Welcome and stuff!! (This is a welcome message!!!)",
-    "*Testing multi-line messages*",
-    "FYI - you can use CTRL+C to end this early (Assuming it works)",
-    "So yeahh.. currently, this doesn't do anything.",
-    "It just repeats whatever you send, but capitalized!",
-    "Go ahead and type something:"]);
-    cmdIn.focus();
+    send("GET", "/cli/welcome/", null, function(err, message){
+        if (err) printLine("systemError", err);
+        typedWelcome(message);
+        cmdIn.focus();
+    });
 }
 
 function createTextSpan(type, text){
@@ -111,12 +109,23 @@ function processCommand(input){
 }
 
 function printLine(format, text){
-    let newLine = document.createElement("div");
-    let lineText = createTextSpan(format, text);
-    newLine.appendChild(lineText);
+    if (text.constructor === String) {
+        let newLine = document.createElement("div");
+        let lineText = createTextSpan(format, text);
+        newLine.appendChild(lineText);
 
-    cmdOut.appendChild(newLine);
-    window.scrollTo(0,document.body.scrollHeight);
+        cmdOut.appendChild(newLine);
+        window.scrollTo(0,document.body.scrollHeight);
+    } else if (text.constructor === Array) {
+        for (let lineNumber in text) {
+            let newLine = document.createElement("div");
+            let lineText = createTextSpan(format, text[lineNumber]);
+            newLine.appendChild(lineText);
+
+            cmdOut.appendChild(newLine);
+            window.scrollTo(0,document.body.scrollHeight);
+        }
+    }
 }
 
 function typedWelcome(text) {

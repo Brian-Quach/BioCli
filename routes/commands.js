@@ -1,4 +1,89 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 module.exports = function(app){
+
+    const database = mongoose.connection;
+    database.on('error', console.error.bind(console, 'MongoDB connection error:'));
+    database.once('open', function() {
+        console.log("Database Connection Established!");
+    });
+
+    let Commands = mongoose.model('Command',
+        new Schema({
+            command: String,
+            description: String,
+            args: {
+                param: String,
+                desc: String
+            }
+        }),
+        'commands');
+
+    let About = mongoose.model('About',
+        new Schema({
+            firstname: String,
+            lastname: String,
+            title: String,
+            email: String,
+            phone: String,
+            website: String,
+            summary: String,
+            location: {
+                address: String,
+                city: String,
+                country: String,
+                region: String,
+                postalcode: String
+            }
+        }),
+        'about');
+
+    let Experience = mongoose.model('Experience',
+        new Schema({
+            company: String,
+            position: String,
+            location: String,
+            start: String,
+            end: String,
+            highlights: [String]
+        }),
+        'experience');
+
+    let Skills = mongoose.model('Skill',
+        new Schema({
+            category: String,
+            skill: String,
+            proficiency: Number
+        }),
+        'skills');
+
+    let Contact = mongoose.model('Contact',
+        new Schema({
+            method: String,
+            contact: String,
+            url: String
+        }),
+        'contact');
+
+    let Education = mongoose.model('Education',
+        new Schema({
+            institution: String,
+            degree: String,
+            start: String,
+            end: String,
+            description: String
+        }),
+        'education');
+
+    let Content = mongoose.model('Content',
+        new Schema({
+            type: String,
+            value: [String]
+        }),
+        'content');
+
+
 
     function ConsoleOut(text, status, isPrompt) {
         this.textOutput = text;
@@ -9,38 +94,59 @@ module.exports = function(app){
     app.post('/cli/sendCmd/', function (req, res){
         //TODO: Create non-standard return types
         let input = req.body;
-        console.log("Recieved:", input.command);
 
         let returnString, returnType;
-
         if (Object.keys(commands).indexOf(input.command) > -1){
-            returnString = commands[input.command].apply(null, input.params);
-            returnType = "systemOutput";
+
+            commands[input.command].apply(null, input.params).then((returnString) => {
+                let output = new ConsoleOut(returnString, "systemOutput", false);
+                return res.json(output);
+            });
+
         } else {
             returnString = "Command not found, use HELP to show available commands"
             returnType = "systemError";
+            let output = new ConsoleOut(returnString, returnType, false);
+            return res.json(output);
         }
+    });
 
-        let output = new ConsoleOut(returnString, returnType, false);
+    app.get('/cli/welcome/', function (req, res){
+        Content.findOne({type: "Welcome"}, function(err, content){
+            if (err) return;
 
-        return res.json(output);
+            let welcomeText = content.value;
+            return res.json(welcomeText);
+        })
     });
 
 
 
     let commands = {};
 
-    commands.help = function(command = null){
-        if (command === null){
-            return "This is a help text";
-        } else {
-            return "This is the help text for " + command;
-        }
-    }
+    commands.help = async function(command = null){
+        return new Promise(function(resolve, reject){
+            let response;
+            if (command === null){
+                Commands.find({}, function(err, commands){
+                    if (err) reject(err);
+                    //response = commands[0].description;
+                    response = ['test1', 'test2', 'test3'];
+                    resolve(response);
+                });
+            } else {
+                response = "This is the help text for " + command;
+                resolve(response);
+            }
+        });
+    };
 
-    commands.about = function(){
-        return "This is the about command!"
-    }
+    commands.about = async function(){
+        return new Promise(function(resolve, reject){{
+
+            resolve("This is the about command!");
+        }});
+    };
 
 
 };
