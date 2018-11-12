@@ -130,7 +130,7 @@ module.exports = function(app){
             if (command === null){
                 Commands.find({}, function(err, commands){
                     if (err) reject(err);
-                    let response = ['Type `help cmd` to find out more about the command `cmd`'];
+                    response = ['Type `help cmd` to find out more about the command `cmd`', '', ''];
                     commands.forEach( function(cmd) {
                         let nextLine = cmd.command;
                         nextLine = nextLine + ' - ' + cmd.description;
@@ -139,8 +139,17 @@ module.exports = function(app){
                     resolve(response);
                 });
             } else {
-                response = "This is the help text for " + command;
-                resolve(response);
+                Commands.findOne({command: command}, function(err, cmd){
+                    if (err) resolve('`' + command + '` not found, please try again!');
+                    response = [command + ": " + cmd.usage, cmd.description, '', 'Arguments:'];
+
+                    cmd.args.forEach(function(arg){
+                        let nextLine = arg.param + ' - ' + arg.desc;
+                        response.push(nextLine);
+                    });
+
+                    resolve(response);
+                });
             }
         });
     };
