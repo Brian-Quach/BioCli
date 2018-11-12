@@ -130,8 +130,12 @@ module.exports = function(app){
             if (command === null){
                 Commands.find({}, function(err, commands){
                     if (err) reject(err);
-                    //response = commands[0].description;
-                    response = ['test1', 'test2', 'test3'];
+                    let response = ['Type `help cmd` to find out more about the command `cmd`'];
+                    commands.forEach( function(cmd) {
+                        let nextLine = cmd.command;
+                        nextLine = nextLine + ' - ' + cmd.description;
+                        response.push(nextLine);
+                    } );
                     resolve(response);
                 });
             } else {
