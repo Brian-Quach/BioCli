@@ -19,8 +19,8 @@ function send(method, url, data, callback){
         xhr.send(JSON.stringify(data));
     }
 }
+window.addEventListener('load', function() {
 
-window.onload(function(){
     welcomeMessage();
 
 });
