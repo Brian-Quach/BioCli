@@ -19,11 +19,11 @@ function send(method, url, data, callback){
         xhr.send(JSON.stringify(data));
     }
 }
-window.addEventListener('load', function() {
+//window.addEventListener('load', function() {
 
-    welcomeMessage();
+    //welcomeMessage();
 
-});
+//});
 
 function ConsoleInput(type, input) {
     this.inputType = type;
@@ -78,6 +78,7 @@ document.addEventListener('keyup', function (e) {
 });
 
 
+welcomeMessage();
 
 function welcomeMessage(){
     send("GET", "/cli/welcome/", null, function(err, message){
