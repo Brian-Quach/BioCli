@@ -62,6 +62,7 @@ module.exports = function(app){
     let Contact = mongoose.model('Contact',
         new Schema({
             method: String,
+            method_lower: String,
             contact: String,
             url: String
         }),
@@ -140,7 +141,7 @@ module.exports = function(app){
                     resolve(response);
                 });
             } else {
-                Commands.findOne({command: command}, function(err, cmd){
+                Commands.findOne({command: command.toLowerCase()}, function(err, cmd){
                     if (err) return resolve('`' + command + '` not found, please try again!');
                     if (cmd == null) return resolve('`' + command + '` not found, please try again!');
                     response = [command + ": " + cmd.usage, cmd.description];
@@ -159,11 +160,49 @@ module.exports = function(app){
     };
 
     commands.about = async function(){
-        return new Promise(function(resolve, reject){{
-
+        return new Promise(function(resolve, reject){
             resolve("This is the about command!");
-        }});
+        });
     };
+
+    commands.contact = async function(method = null){
+        return new Promise(function(resolve, reject){
+            if (method == null){
+                Contact.find({}, function(err, contacts){
+                    if (err) return reject(err);
+                    let response = [];
+                    response.push('Please specific method of contact from one of the following:');
+
+                    let contactOptions = "";
+                    contacts.forEach(function(contactInfo){
+                        contactOptions = contactOptions + " " + contactInfo.method;
+                    });
+
+                    response.push(contactOptions);
+                    response.push('');
+                    response.push('Or use `contact message` to leave me a message!');
+
+                    resolve(response)
+                });
+            } else if (method.toLowerCase() === 'message') {
+                let response = [];
+
+
+
+                resolve(response);
+            } else {
+                Contact.findOne({method_lower: method.toLowerCase()}, function(err, contactInfo){
+                    if (err) return reject(err);
+                    if (contactInfo == null) return resolve('Sorry, I do not use ' + method +' :(');
+                    let response = ['I am ' + contactInfo.contact + ' on ' + contactInfo.methodName + '!'];
+                    if (contactInfo.url){
+                        response.push('Find me at ' + contactInfo.url + '!');
+                    }
+                    resolve(response);
+                })
+            }
+        });
+    }
 
 
 };
