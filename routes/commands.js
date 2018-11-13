@@ -13,10 +13,11 @@ module.exports = function(app){
         new Schema({
             command: String,
             description: String,
-            args: {
+            usage: String,
+            args: [{
                 param: String,
                 desc: String
-            }
+            }]
         }),
         'commands');
 
@@ -140,14 +141,17 @@ module.exports = function(app){
                 });
             } else {
                 Commands.findOne({command: command}, function(err, cmd){
-                    if (err) resolve('`' + command + '` not found, please try again!');
-                    response = [command + ": " + cmd.usage, cmd.description, '', 'Arguments:'];
-
-                    cmd.args.forEach(function(arg){
-                        let nextLine = arg.param + ' - ' + arg.desc;
-                        response.push(nextLine);
-                    });
-
+                    if (err) return resolve('`' + command + '` not found, please try again!');
+                    if (cmd == null) return resolve('`' + command + '` not found, please try again!');
+                    response = [command + ": " + cmd.usage, cmd.description];
+                    if (cmd.args.length !== 0){
+                        response.push('');
+                        response.push('Arguments:');
+                        cmd.args.forEach(function(arg){
+                            let nextLine = arg.param + ": " + arg.desc;
+                            response.push(nextLine);
+                        });
+                    }
                     resolve(response);
                 });
             }
