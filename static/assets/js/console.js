@@ -90,8 +90,11 @@ function createTextSpan(type, text){
     newElement.id = "out-"+outputCount.toString();
     outputCount++;
     newElement.textContent = text;
+    if (text === ""){
+        newElement.appendChild(document.createElement('br'));
+    }
 
-    return newElement;
+        return newElement;
 }
 
 
