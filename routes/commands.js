@@ -130,6 +130,25 @@ module.exports = function(app){
 
     let commands = {};
 
+    commands.get = async function(section = null, args = null){
+        return new Promise(function(resolve, reject){
+            if (section === null){
+                return resolve('Instructions Here');
+            } else if (section === 'all') {
+                return resolve('Full Resume');
+            } else if (section === 'experience') {
+                return resolve('Experience Section - check args'); 
+            } else if (section === 'skills') {
+                return resolve('skills section - check args');
+            } else if (section === 'education'){
+                return resolve('edu - change to cases');
+            }
+            return resolve("This is the get function");
+
+        });
+    };
+
+
     commands.help = async function(command = null){
         return new Promise(function(resolve, reject){
             let response;
