@@ -117,6 +117,9 @@ module.exports = function(app){
     app.get('/cli/welcome/', function (req, res){
         Content.findOne({type: "Welcome"}, function(err, content){
             if (err) return;
+            if (content == null){
+                return res.json("Hello!");
+            }
 
             let welcomeText = content.value;
             return res.json(welcomeText);

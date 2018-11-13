@@ -20,6 +20,11 @@ function send(method, url, data, callback){
     }
 }
 
+window.onload(function(){
+    welcomeMessage();
+
+});
+
 function ConsoleInput(type, input) {
     this.inputType = type;
     let params = input.split(" ");
@@ -72,8 +77,6 @@ document.addEventListener('keyup', function (e) {
     }
 });
 
-//TODO - Startup
-welcomeMessage();
 
 
 function welcomeMessage(){
