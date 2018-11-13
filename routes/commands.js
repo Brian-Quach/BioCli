@@ -25,6 +25,7 @@ module.exports = function(app){
         new Schema({
             firstname: String,
             lastname: String,
+            pronoun: String,
             title: String,
             email: String,
             phone: String,
@@ -159,9 +160,23 @@ module.exports = function(app){
         });
     };
 
-    commands.about = async function(){
+    commands.about = async function(info = null){
         return new Promise(function(resolve, reject){
-            resolve("This is the about command!");
+            if (info == null){
+                About.find({}, function(err, profile){
+                    if (err) return reject(err);
+                    if (profile == null) reject("Could not find profile");
+                    profile = profile[0];
+                    let response = [profile.firstname + ' ' + profile.lastname + ' is a ' + profile.summary]
+                    response.push(profile.firstname + ' is currently based in ' + profile.location.city + ', ' +
+                        profile.location.country + ' as a ' + profile.title);
+
+                    resolve(response);
+                })
+            } else {
+                // Temp: Too lazy to do rn
+                resolve(commands.about(null));
+            }
         });
     };
 
@@ -185,8 +200,7 @@ module.exports = function(app){
                     resolve(response)
                 });
             } else if (method.toLowerCase() === 'message') {
-                let response = [];
-
+                let response = ['This feature is in progress, just email me :('];
 
 
                 resolve(response);
