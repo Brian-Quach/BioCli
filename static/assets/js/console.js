@@ -93,7 +93,7 @@ function createTextSpan(type, text){
     newElement.id = "out-"+outputCount.toString();
     outputCount++;
     newElement.textContent = text;
-    if (text === ""){
+    if (text === "" || text === null){
         newElement.appendChild(document.createElement('br'));
     }
 

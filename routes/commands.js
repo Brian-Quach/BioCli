@@ -99,9 +99,9 @@ module.exports = function(app){
         let input = req.body;
 
         let returnString, returnType;
-        if (Object.keys(commands).indexOf(input.command) > -1){
+        if (Object.keys(commands).indexOf(input.command.toLowerCase()) > -1){
 
-            commands[input.command].apply(null, input.params).then((returnString) => {
+            commands[input.command.toLowerCase()].apply(null, input.params).then((returnString) => {
                 let output = new ConsoleOut(returnString, "systemOutput", false);
                 return res.json(output);
             });
@@ -133,18 +133,32 @@ module.exports = function(app){
     commands.get = async function(section = null, args = null){
         return new Promise(function(resolve, reject){
             if (section === null){
-                return resolve('Instructions Here');
-            } else if (section === 'all') {
-                return resolve('Full Resume');
-            } else if (section === 'experience') {
-                return resolve('Experience Section - check args'); 
-            } else if (section === 'skills') {
-                return resolve('skills section - check args');
-            } else if (section === 'education'){
-                return resolve('edu - change to cases');
+                Content.findOne({type: 'Get'}, function(err, response){
+                    if (err || (response == null)) return resolve("Could not get response.");
+                    return resolve(response.value);
+                });
+            } else {
+                section = section.toLowerCase();
+                switch (section) {
+                    case 'summary':
+                        resolve('summary');
+                        break;
+                    case 'skills':
+                        resolve('skills');
+                        break;
+                    case 'experience':
+                        resolve('experience');
+                        break;
+                    case 'education':
+                        resolve('education');
+                        break;
+                    case 'projects':
+                        resolve('projects');
+                        break;
+                    default:
+                        resolve(section + ' is not an option, please try again.');
+                }
             }
-            return resolve("This is the get function");
-
         });
     };
 
