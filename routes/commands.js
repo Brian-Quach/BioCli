@@ -277,5 +277,17 @@ module.exports = function(app){
         });
     }
 
+    commands.test = async function(arg = null){
+        return new Promise(function(resolve, reject){
+            let responseString = ["This is a response string", "With two lines..", "Ohwait, threelines!"];
+            let resStatus = "systemOut";
+
+            if (arg) resStatus = arg;
+
+
+            resolve(responseString);
+        });
+    }
+
 
 };
