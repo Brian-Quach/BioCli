@@ -224,7 +224,7 @@ module.exports = function(app){
             if (info == null){
                 About.find({}, function(err, profile){
                     if (err) return reject(err);
-                    if (profile == null) reject("Could not find profile");
+                    if (profile.length === 0) return resolve("Could not find profile");
                     profile = profile[0];
                     let response = [profile.firstname + ' ' + profile.lastname + ' is a ' + profile.summary]
                     response.push(profile.firstname + ' is currently based in ' + profile.location.city + ', ' +
