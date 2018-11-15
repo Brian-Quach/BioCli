@@ -139,21 +139,41 @@ module.exports = function(app){
                 });
             } else {
                 section = section.toLowerCase();
+                let filters = {};
+                let response = [];
                 switch (section) {
                     case 'summary':
-                        resolve('summary');
+                        resolve(commands.about(null));
                         break;
                     case 'skills':
-                        resolve('skills');
+                        Skills.find(filters, function(err, skillsList){
+                            // TODO: Format properly
+                            skillsList.forEach(function(skill){
+                                response.push(skill.skill);
+                            });
+                            resolve(response);
+                        });
                         break;
                     case 'experience':
-                        resolve('experience');
+                        Experience.find(filters, function(err, experienceList){
+                            // TODO: Format
+                            experienceList.forEach(function(experience){
+                                response.push(experience.position + ' at ' + experience.company);
+                            });
+                            resolve(response);
+                        });
                         break;
                     case 'education':
-                        resolve('education');
+                        Education.find({}, function(err, educationList){
+                            // TODO: Format
+                            educationList.forEach(function(education){
+                                response.push(education.degree + ' from ' + education.institution);
+                            });
+                            resolve(response);
+                        });
                         break;
                     case 'projects':
-                        resolve('projects');
+                        resolve('*placeholder*');
                         break;
                     default:
                         resolve(section + ' is not an option, please try again.');
