@@ -175,6 +175,9 @@ module.exports = function(app){
                     case 'projects':
                         resolve('*placeholder*');
                         break;
+                    case 'interests':
+                        resolve('*placeholder*');
+                        break;
                     default:
                         resolve(section + ' is not an option, please try again.');
                 }
