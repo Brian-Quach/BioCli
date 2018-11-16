@@ -246,7 +246,7 @@ module.exports = function(app){
         });
     };
 
-    commands.contact = async function(method = null){
+    commands.contact = async function(method = null, name = null, email = null, msg = null){
         return new Promise(function(resolve, reject){
             if (method == null){
                 Contact.find({}, function(err, contacts){
@@ -266,6 +266,14 @@ module.exports = function(app){
                     resolve(sysOut(response))
                 });
             } else if (method.toLowerCase() === 'message') {
+                if (msg === null) resolve(sysOut('Use `contact message [name] [email] [message]` to send a message!'));
+
+                console.log(name);
+                console.log(email);
+                console.log(msg);
+
+                //TODO: Figure out how to verify user is real person
+
                 let response = ['This feature is in progress, just email me :('];
 
 
