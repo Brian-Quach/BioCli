@@ -7,8 +7,8 @@ app.use(bodyParser.json());
 app.use(express.static('static'));
 
 const mongoose = require('mongoose');
-const mongoDb = 'mongodb://admin:password@briiquach.com:27020/profile'
-//const mongoDb = 'mongodb://localhost:27017/profile'
+//const mongoDb = 'mongodb://admin:password@briiquach.com:27020/profile'
+const mongoDb = 'mongodb://localhost:27017/profile'
 
 mongoose.connect(mongoDb, { useNewUrlParser: true });
 mongoose.Promise = global.Promise;

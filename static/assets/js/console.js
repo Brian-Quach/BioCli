@@ -93,7 +93,26 @@ function createTextSpan(type, text){
     newElement.classList.add(type);
     newElement.id = "out-"+outputCount.toString();
     outputCount++;
-    newElement.textContent = text;
+    if (text.includes('url{')){
+        let textSplit = text.split('url{');
+        newElement.textContent = textSplit[0];
+
+        textSplit = textSplit[1].split(',');
+
+        let link = document.createElement('a');
+        link.setAttribute('href', textSplit[0]);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+
+        textSplit = textSplit[1].split('}');
+        link.textContent = textSplit[0];
+
+        newElement.appendChild(link);
+
+        newElement.innerHTML += textSplit[1];
+    } else {
+        newElement.textContent = text;
+    }
     if (text === "" || text === null){
         newElement.appendChild(document.createElement('br'));
     }
