@@ -110,6 +110,14 @@ function createTextSpan(type, text){
         newElement.appendChild(link);
 
         newElement.innerHTML += textSplit[1];
+    } else if (text.includes('skill{')){
+        let textSplit = text.split('skill{')[1].split(',');
+        let skillName = textSplit[0];
+        let prof = (textSplit[1]).split('}')[0];
+
+        newSkill(skillName, prof);
+        newElement.textContent = skillName;
+
     } else {
         newElement.textContent = text;
     }
@@ -120,6 +128,9 @@ function createTextSpan(type, text){
         return newElement;
 }
 
+function newSkill(skill, proficiency){
+    console.log(skill + ' at ' + proficiency);
+}
 
 function processCommand(input){
     let currPrompt = document.getElementById("prompt");

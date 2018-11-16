@@ -308,7 +308,7 @@ module.exports = function(app){
 
     commands.test = async function(arg = null){
         return new Promise(function(resolve){
-            let responseString = ["This is a response string", "With two lines..", "Ohwait, threelines!"];
+            let responseString = ["This is a response string", "With two lines..", "Ohwait, threelines!", "skill{Python,9}"];
             let resStatus = "systemOut";
 
             if (arg) resStatus = arg;
