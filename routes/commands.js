@@ -287,7 +287,17 @@ module.exports = function(app){
                 })
             }
         });
-    }
+    };
+
+    commands.info = async function(){
+        return new Promise(function(resolve, reject) {
+            Content.findOne({type: 'Site Info'}, function (err, info) {
+                if (err) reject(err);
+                resolve(sysOut(info.value));
+            });
+        });
+    };
+
 
     commands.test = async function(arg = null){
         return new Promise(function(resolve){
@@ -297,7 +307,7 @@ module.exports = function(app){
             if (arg) resStatus = arg;
             resolve(new ConsoleOut(responseString, resStatus, false));
         });
-    }
+    };
 
     function sysOut(text){
         return new ConsoleOut(text, 'systemOut', false);
