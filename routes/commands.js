@@ -277,7 +277,7 @@ module.exports = function(app){
                     if (contactInfo == null) return resolve('Sorry, I do not use ' + method +' :(');
                     let response = ['I am ' + contactInfo.contact + ' on ' + contactInfo.method + '!'];
                     if (contactInfo.url){
-                        response.push('Find me at ' + contactInfo.url + '!');
+                        response.push('Find me url{'+contactInfo.url+',here}!');
                     }
                     resolve(new ConsoleOut(response, "systemOutput", false));
                 })
