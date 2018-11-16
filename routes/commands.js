@@ -268,13 +268,11 @@ module.exports = function(app){
             } else if (method.toLowerCase() === 'message') {
                 if (msg === null) resolve(sysOut('Use `contact message [name] [email] [message]` to send a message!'));
 
-                console.log(name);
-                console.log(email);
-                console.log(msg);
+
 
                 //TODO: Figure out how to verify user is real person
 
-                let response = ['This feature is in progress, just email me :('];
+                let response = ['This feature is in progress, just email me :('] + arguments;
 
 
                 resolve(sysOut(response));
