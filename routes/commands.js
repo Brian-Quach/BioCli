@@ -69,6 +69,15 @@ module.exports = function(app){
         }),
         'contact');
 
+    let Message = mongoose.model('Message',
+        new Schema({
+            name: String,
+            email: String,
+            date: String,
+            Content: String
+        }),
+        'messages');
+
     let Education = mongoose.model('Education',
         new Schema({
             institution: String,
