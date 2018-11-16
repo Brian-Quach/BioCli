@@ -129,7 +129,7 @@ function createTextSpan(type, text){
 }
 
 function newSkill(skill, proficiency){
-    console.log(skill + ' at ' + proficiency);
+    let skillBar = document.createElement('div');
 }
 
 function processCommand(input){
