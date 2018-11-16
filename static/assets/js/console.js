@@ -112,7 +112,14 @@ function processCommand(input){
 
     send("POST", "/cli/sendCmd/", newInput, function(err, sysOut){
         if (err) printLine("systemError", err);
-        if (!sysOut.isPrompt) printLine(sysOut.resStatus, sysOut.textOutput);
+        if (!sysOut.isPrompt){
+            if (sysOut.resStatus === 'typedJs'){
+                disableInput();
+                typedWelcome(sysOut.textOutput);
+            } else {
+                printLine(sysOut.resStatus, sysOut.textOutput);
+            }
+        }
     });
 }
 
