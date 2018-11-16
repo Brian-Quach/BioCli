@@ -275,10 +275,15 @@ module.exports = function(app){
                 Contact.findOne({method_lower: method.toLowerCase()}, function(err, contactInfo){
                     if (err) return reject(err);
                     if (contactInfo == null) return resolve('Sorry, I do not use ' + method +' :(');
-                    let response = ['I am ' + contactInfo.contact + ' on ' + contactInfo.method + '!'];
+
+                    let handle;
                     if (contactInfo.url){
-                        response.push('Find me url{'+contactInfo.url+',here}!');
+                        handle = 'url{'+contactInfo.url+',' + contactInfo.contact + '}'
+                    } else {
+                        handle = contactInfo.contact;
                     }
+
+                    let response = ['I am ' + handle + ' on ' + contactInfo.method + '!'];
                     resolve(new ConsoleOut(response, "systemOutput", false));
                 })
             }
