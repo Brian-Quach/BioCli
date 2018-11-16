@@ -267,21 +267,20 @@ module.exports = function(app){
                 });
             } else if (method.toLowerCase() === 'message') {
 
-                //if (args.length < 4) resolve(sysOut('Use `contact message [name] [email] [message]` to send a message!'));
+                if (args.length < 3) resolve(sysOut('Use `contact message [name] [email] [message]` to send a message!'));
 
-
-
+                //TODO: What2DoIfNameIsMoreThanOneWord
                 //TODO: Figure out how to verify user is real person
 
                 //let response = ['This feature is in progress, just email me :('];
 
-                let response = args;
+                let response = args[2];
 
                 resolve(sysOut(response));
             } else {
                 Contact.findOne({method_lower: method.toLowerCase()}, function(err, contactInfo){
                     if (err) return reject(err);
-                    if (contactInfo == null) return resolve('Sorry, I do not use ' + method +' :(');
+                    if (contactInfo == null) return resolve('Sorry, I don\'t use ' + method +' :(');
 
                     let handle;
                     if (contactInfo.url){
