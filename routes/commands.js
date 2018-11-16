@@ -101,8 +101,7 @@ module.exports = function(app){
         let returnString, returnType;
         if (Object.keys(commands).indexOf(input.command.toLowerCase()) > -1){
 
-            commands[input.command.toLowerCase()].apply(null, input.params).then((returnString) => {
-                let output = new ConsoleOut(returnString, "systemOutput", false);
+            commands[input.command.toLowerCase()].apply(null, input.params).then((output) => {
                 return res.json(output);
             });
 
@@ -135,7 +134,7 @@ module.exports = function(app){
             if (section === null){
                 Content.findOne({type: 'Get'}, function(err, response){
                     if (err || (response == null)) return resolve("Could not get response.");
-                    return resolve(response.value);
+                    return resolve(new ConsoleOut(response.value, "systemOutput", false));
                 });
             } else {
                 section = section.toLowerCase();
@@ -151,7 +150,7 @@ module.exports = function(app){
                             skillsList.forEach(function(skill){
                                 response.push(skill.skill);
                             });
-                            resolve(response);
+                            resolve(new ConsoleOut(response, "systemOutput", false));
                         });
                         break;
                     case 'experience':
@@ -160,7 +159,7 @@ module.exports = function(app){
                             experienceList.forEach(function(experience){
                                 response.push(experience.position + ' at ' + experience.company);
                             });
-                            resolve(response);
+                            resolve(new ConsoleOut(response, "systemOutput", false));
                         });
                         break;
                     case 'education':
@@ -169,17 +168,17 @@ module.exports = function(app){
                             educationList.forEach(function(education){
                                 response.push(education.degree + ' from ' + education.institution);
                             });
-                            resolve(response);
+                            resolve(new ConsoleOut(response, "systemOutput", false));
                         });
                         break;
                     case 'projects':
-                        resolve('*placeholder*');
+                        resolve(new ConsoleOut('*Placeholder*', "systemOutput", false));
                         break;
                     case 'interests':
-                        resolve('*placeholder*');
+                        resolve(new ConsoleOut('*Placeholder*', "systemOutput", false));
                         break;
                     default:
-                        resolve(section + ' is not an option, please try again.');
+                        resolve(new ConsoleOut(section + ' is not an option, please try again.', "systemOutput", false));
                 }
             }
         });
@@ -198,12 +197,12 @@ module.exports = function(app){
                         nextLine = nextLine + ' - ' + cmd.description;
                         response.push(nextLine);
                     } );
-                    resolve(response);
+                    resolve(new ConsoleOut(response, "systemOutput", false));
                 });
             } else {
                 Commands.findOne({command: command.toLowerCase()}, function(err, cmd){
-                    if (err) return resolve('`' + command + '` not found, please try again!');
-                    if (cmd == null) return resolve('`' + command + '` not found, please try again!');
+                    if (err) return resolve(new ConsoleOut('`' + command + '` not found, please try again!', "systemOutput", false));
+                    if (cmd == null) return resolve(new ConsoleOut('`' + command + '` not found, please try again!', "systemOutput", false));
                     response = [command + ": " + cmd.usage, cmd.description];
                     if (cmd.args.length !== 0){
                         response.push('');
@@ -213,7 +212,7 @@ module.exports = function(app){
                             response.push(nextLine);
                         });
                     }
-                    resolve(response);
+                    resolve(new ConsoleOut(response, "systemOutput", false));
                 });
             }
         });
@@ -224,13 +223,13 @@ module.exports = function(app){
             if (info == null){
                 About.find({}, function(err, profile){
                     if (err) return reject(err);
-                    if (profile.length === 0) return resolve("Could not find profile");
+                    if (profile.length === 0) return resolve(new ConsoleOut("Could not find profile", "systemOutput", false));
                     profile = profile[0];
                     let response = [profile.firstname + ' ' + profile.lastname + ' is a ' + profile.summary]
                     response.push(profile.firstname + ' is currently based in ' + profile.location.city + ', ' +
                         profile.location.country + ' as a ' + profile.title);
 
-                    resolve(response);
+                    resolve(new ConsoleOut(response, "systemOutput", false));
                 })
             } else {
                 // Temp: Too lazy to do rn
@@ -256,22 +255,22 @@ module.exports = function(app){
                     response.push('');
                     response.push('Or use `contact message` to leave me a message!');
 
-                    resolve(response)
+                    resolve(new ConsoleOut(response, "systemOutput", false))
                 });
             } else if (method.toLowerCase() === 'message') {
                 let response = ['This feature is in progress, just email me :('];
 
 
-                resolve(response);
+                resolve(new ConsoleOut(response, "systemOutput", false));
             } else {
                 Contact.findOne({method_lower: method.toLowerCase()}, function(err, contactInfo){
                     if (err) return reject(err);
                     if (contactInfo == null) return resolve('Sorry, I do not use ' + method +' :(');
-                    let response = ['I am ' + contactInfo.contact + ' on ' + contactInfo.methodName + '!'];
+                    let response = ['I am ' + contactInfo.contact + ' on ' + contactInfo.method + '!'];
                     if (contactInfo.url){
                         response.push('Find me at ' + contactInfo.url + '!');
                     }
-                    resolve(response);
+                    resolve(new ConsoleOut(response, "systemOutput", false));
                 })
             }
         });
@@ -285,7 +284,7 @@ module.exports = function(app){
             if (arg) resStatus = arg;
 
 
-            resolve(responseString);
+            resolve(new ConsoleOut(responseString, resStatus, false));
         });
     }
 
