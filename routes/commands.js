@@ -107,7 +107,7 @@ module.exports = function(app){
         //TODO: Create non-standard return types
         let input = req.body;
 
-        let returnString, returnType;
+        let returnString;
         if (Object.keys(commands).indexOf(input.command.toLowerCase()) > -1){
 
             commands[input.command.toLowerCase()].apply(null, input.params).then((output) => {
@@ -115,9 +115,8 @@ module.exports = function(app){
             });
 
         } else {
-            returnString = "Command not found, use HELP to show available commands"
-            returnType = "systemError";
-            let output = new ConsoleOut(returnString, returnType, false);
+            returnString = "Command not found, use HELP to show available commands";
+            let output = sysErr(returnString);
             return res.json(output);
         }
     });
@@ -139,11 +138,11 @@ module.exports = function(app){
     let commands = {};
 
     commands.get = async function(section = null, args = null){
-        return new Promise(function(resolve, reject){
+        return new Promise(function(resolve){
             if (section === null){
                 Content.findOne({type: 'Get'}, function(err, response){
                     if (err || (response == null)) return resolve("Could not get response.");
-                    return resolve(new ConsoleOut(response.value, "systemOutput", false));
+                    return resolve(sysOut(response.value));
                 });
             } else {
                 section = section.toLowerCase();
@@ -159,7 +158,7 @@ module.exports = function(app){
                             skillsList.forEach(function(skill){
                                 response.push(skill.skill);
                             });
-                            resolve(new ConsoleOut(response, "systemOutput", false));
+                            resolve(sysOut(response));
                         });
                         break;
                     case 'experience':
@@ -168,7 +167,7 @@ module.exports = function(app){
                             experienceList.forEach(function(experience){
                                 response.push(experience.position + ' at ' + experience.company);
                             });
-                            resolve(new ConsoleOut(response, "systemOutput", false));
+                            resolve(sysOut(response));
                         });
                         break;
                     case 'education':
@@ -177,17 +176,17 @@ module.exports = function(app){
                             educationList.forEach(function(education){
                                 response.push(education.degree + ' from ' + education.institution);
                             });
-                            resolve(new ConsoleOut(response, "systemOutput", false));
+                            resolve(sysOut(response));
                         });
                         break;
                     case 'projects':
-                        resolve(new ConsoleOut('*Placeholder*', "systemOutput", false));
+                        resolve(sysOut('*Placeholder*'));
                         break;
                     case 'interests':
-                        resolve(new ConsoleOut('*Placeholder*', "systemOutput", false));
+                        resolve(sysOut('*Placeholder*'));
                         break;
                     default:
-                        resolve(new ConsoleOut(section + ' is not an option, please try again.', "systemOutput", false));
+                        resolve(sysOut(section + ' is not an option, please try again.'));
                 }
             }
         });
@@ -206,12 +205,12 @@ module.exports = function(app){
                         nextLine = nextLine + ' - ' + cmd.description;
                         response.push(nextLine);
                     } );
-                    resolve(new ConsoleOut(response, "systemOutput", false));
+                    resolve(sysOut(response));
                 });
             } else {
                 Commands.findOne({command: command.toLowerCase()}, function(err, cmd){
-                    if (err) return resolve(new ConsoleOut('`' + command + '` not found, please try again!', "systemOutput", false));
-                    if (cmd == null) return resolve(new ConsoleOut('`' + command + '` not found, please try again!', "systemOutput", false));
+                    if (err) return resolve(sysOut('`' + command + '` not found, please try again!'));
+                    if (cmd == null) return resolve(sysOut('`' + command + '` not found, please try again!'));
                     response = [command + ": " + cmd.usage, cmd.description];
                     if (cmd.args.length !== 0){
                         response.push('');
@@ -221,7 +220,7 @@ module.exports = function(app){
                             response.push(nextLine);
                         });
                     }
-                    resolve(new ConsoleOut(response, "systemOutput", false));
+                    resolve(sysOut(response));
                 });
             }
         });
@@ -232,13 +231,13 @@ module.exports = function(app){
             if (info == null){
                 About.find({}, function(err, profile){
                     if (err) return reject(err);
-                    if (profile.length === 0) return resolve(new ConsoleOut("Could not find profile", "systemOutput", false));
+                    if (profile.length === 0) return resolve(sysOut("Could not find profile"));
                     profile = profile[0];
                     let response = [profile.firstname + ' ' + profile.lastname + ' is a ' + profile.summary]
                     response.push(profile.firstname + ' is currently based in ' + profile.location.city + ', ' +
                         profile.location.country + ' as a ' + profile.title);
 
-                    resolve(new ConsoleOut(response, "systemOutput", false));
+                    resolve(sysOut(response));
                 })
             } else {
                 // Temp: Too lazy to do rn
@@ -264,13 +263,13 @@ module.exports = function(app){
                     response.push('');
                     response.push('Or use `contact message` to leave me a message!');
 
-                    resolve(new ConsoleOut(response, "systemOutput", false))
+                    resolve(sysOut(response))
                 });
             } else if (method.toLowerCase() === 'message') {
                 let response = ['This feature is in progress, just email me :('];
 
 
-                resolve(new ConsoleOut(response, "systemOutput", false));
+                resolve(sysOut(response));
             } else {
                 Contact.findOne({method_lower: method.toLowerCase()}, function(err, contactInfo){
                     if (err) return reject(err);
@@ -283,24 +282,27 @@ module.exports = function(app){
                         handle = contactInfo.contact;
                     }
 
-                    let response = ['I am ' + handle + ' on ' + contactInfo.method + '!'];
-                    resolve(new ConsoleOut(response, "systemOutput", false));
+                    let response = ['I\'m ' + handle + ' on ' + contactInfo.method + '!'];
+                    resolve(sysOut(response));
                 })
             }
         });
     }
 
     commands.test = async function(arg = null){
-        return new Promise(function(resolve, reject){
-            let responseString = ["This is a response string", "With two lines..", "Ohwait, threelines!", "Test url{https://www.google.ca/,here} ok"];
+        return new Promise(function(resolve){
+            let responseString = ["This is a response string", "With two lines..", "Ohwait, threelines!"];
             let resStatus = "systemOut";
 
             if (arg) resStatus = arg;
-
-
             resolve(new ConsoleOut(responseString, resStatus, false));
         });
     }
 
-
+    function sysOut(text){
+        return new ConsoleOut(text, 'systemOut', false);
+    }
+    function sysErr(text){
+        return new ConsoleOut(text, 'systemError', false);
+    }
 };
