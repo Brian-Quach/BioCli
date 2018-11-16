@@ -21,6 +21,7 @@ function send(method, url, data, callback){
 }
 window.addEventListener('load', function() {
 
+    historySetup();
     welcomeMessage();
 
 });
@@ -47,9 +48,9 @@ cmdIn.addEventListener('keydown', function (e) {
         processCommand(cmdIn.value);
         cmdIn.value = "";
     } else if (key === 38) { // Up
-        console.log("Up");
+        cmdIn.value = prevCommand();
     } else if (key === 40) { // Down
-        console.log("Down");
+        cmdIn.value = nextCommand();
     } else if (key === 9) {  // Tab
         e.preventDefault();
         console.log("Tab");
@@ -104,6 +105,7 @@ function createTextSpan(type, text){
 function processCommand(input){
     let currPrompt = document.getElementById("prompt");
     printLine("userInput", currPrompt.textContent + " " + input);
+    saveCommand(input);
 
     let newInput = new ConsoleInput("cmd", input);
 
@@ -123,7 +125,7 @@ function printLine(format, text){
         cmdOut.appendChild(newLine);
         window.scrollTo(0,document.body.scrollHeight);
     } else if (text.constructor === Array) {
-        for (let lineNumber in text) {
+        for (let lineNumber = 0; lineNumber < text.length; lineNumber++) {
             let newLine = document.createElement("div");
             let lineText = createTextSpan(format, text[lineNumber]);
             newLine.appendChild(lineText);
@@ -204,5 +206,45 @@ function disableInput() {
     let inputDiv = document.getElementById("input");
     if (!inputDiv.classList.contains("hidden")){
         inputDiv.classList.add("hidden");
+    }
+}
+
+let cmdHist, histIndex;
+
+function historySetup(){
+    if (localStorage.getItem("cmdHist")){
+        cmdHist = JSON.parse(localStorage.getItem("cmdHist"));
+        histIndex = cmdHist.length-1;
+    } else {
+        cmdHist = [];
+        histIndex = -1;
+    }
+}
+
+function saveCommand(command){
+    if(command.length !== 0 && command !== cmdHist[cmdHist.length - 1]){
+        cmdHist.push(command);
+        localStorage.setItem("cmdHist", JSON.stringify(cmdHist));
+    }
+    histIndex = cmdHist.length;
+}
+
+function prevCommand(){
+    if (cmdHist.length !== 0){
+        if (histIndex === 0) histIndex = cmdHist.length;
+        histIndex = histIndex - 1;
+        return cmdHist[histIndex];
+    } else {
+        return "";
+    }
+}
+
+function nextCommand(){
+    if (cmdHist.length !== 0 && cmdHist.length !== histIndex){
+        if (histIndex === cmdHist.length - 1) return "";
+        histIndex = histIndex + 1;
+        return cmdHist[histIndex];
+    } else {
+        return "";
     }
 }
