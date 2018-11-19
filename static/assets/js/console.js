@@ -2,6 +2,7 @@ let ctrlDown = false;
 let outputCount = 0;
 let isPrompt = true;
 let currTyping = null;
+let lineCnt = 0;
 let windowWidth;
 
 cmdIn = document.getElementById('cmd_in');
@@ -33,9 +34,9 @@ window.addEventListener('resize', setWindowWidth);
 function setWindowWidth(){
     let $char = $('<span>').css({ padding: 0, margin: 0 }).text(String.fromCharCode(160)).appendTo('body'),
         charWidth = $char.width(),
-        numberOfChars = parseInt(( $('body').width() / charWidth ).toFixed(), 10);
+        numberOfChars = parseInt(Math.floor($('body').width() / charWidth ).toFixed(), 10);
     $char.remove();
-    windowWidth = numberOfChars;
+    windowWidth = numberOfChars-2;
 }
 
 function ConsoleInput(type, input) {
@@ -128,7 +129,6 @@ function createTextSpan(type, text){
         let prof = (textSplit[1]).split('}')[0];
 
         let skillBar = newSkill(skillName, prof);
-        newElement.classList.add('pause');
         newElement.appendChild(skillBar);
     } else {
         newElement.textContent = text;
@@ -153,11 +153,14 @@ function newSkill(skill, proficiency){
 
     profBar.innerText = '[' + Array(windowWidth-2).join(String.fromCharCode(160)) + ']';
 
-    let currIndex = 0;
+    let currIndex = -10*lineCnt;
+    lineCnt++;
     let maxIndex = Math.floor((proficiency/10)*(windowWidth-2)) + 1;
-    let animation = setInterval(frame, 25);
+    let animation = setInterval(frame, Math.floor(600/windowWidth));
     function frame() {
-        if (currIndex >= maxIndex) {
+        if (currIndex < 0){
+          currIndex++;
+        } else if (currIndex >= maxIndex) {
             clearInterval(animation);
         } else {
             currIndex++;
@@ -196,18 +199,12 @@ function processCommand(input){
 }
 
 function printLine(format, text){
+    lineCnt = 0;
     if (text.constructor === String) {
         let newLine = document.createElement("div");
         let lineText = createTextSpan(format, text);
 
-        if (lineText.classList.contains('pause')){
-            lineText.classList.remove('pause');
-            setTimeout(function(){
-                newLine.appendChild(lineText);
-            }, 500)
-        } else {
-            newLine.appendChild(lineText);
-        }
+        newLine.appendChild(lineText);
 
         cmdOut.appendChild(newLine);
         window.scrollTo(0,document.body.scrollHeight);
