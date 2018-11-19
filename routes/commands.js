@@ -164,11 +164,11 @@ module.exports = function(app){
                     case 'experience':
                         Experience.find(filters, function(err, experienceList){
                             experienceList.forEach(function(experience){
-                                response.push(experience.start + ' - ' + experience.end);
                                 response.push(experience.position);
-                                response.push(experience.company + ' in ' + experience.location);
+                                response.push(experience.company + ' in ' + experience.location +
+                                    ' from ' + experience.start + ' to ' + experience.end);
                                 experience.highlights.forEach(function(desc){
-                                    response.push('-' + desc);
+                                    response.push('   -' + desc);
                                 });
                                 response.push('');
                             });
