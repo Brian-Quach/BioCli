@@ -163,9 +163,14 @@ module.exports = function(app){
                         break;
                     case 'experience':
                         Experience.find(filters, function(err, experienceList){
-                            // TODO: Format
                             experienceList.forEach(function(experience){
-                                response.push(experience.position + ' at ' + experience.company);
+                                response.push(experience.start + ' - ' + experience.end);
+                                response.push(experience.position);
+                                response.push(experience.company + ' in ' + experience.location);
+                                experience.highlights.forEach(function(desc){
+                                    response.push('-' + desc);
+                                });
+                                response.push('');
                             });
                             resolve(sysOut(response));
                         });
