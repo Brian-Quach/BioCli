@@ -156,7 +156,7 @@ module.exports = function(app){
                         Skills.find(filters, function(err, skillsList){
                             // TODO: Format properly
                             skillsList.forEach(function(skill){
-                                response.push(skill.skill);
+                                response.push('skill{' + skill.skill + ',' + skill.proficiency + '}');
                             });
                             resolve(sysOut(response));
                         });
