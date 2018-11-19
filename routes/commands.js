@@ -177,18 +177,21 @@ module.exports = function(app){
                         break;
                     case 'education':
                         Education.find({}, function(err, educationList){
-                            // TODO: Format
                             educationList.forEach(function(education){
-                                response.push(education.degree + ' from ' + education.institution);
+                                response.push(education.institution);
+                                response.push(education.end);
+                                response.push(education.degree);
+                                response.push(education.description);
+                                response.push('');
                             });
                             resolve(sysOut(response));
                         })
                         break;
                     case 'projects':
-                        resolve(sysOut('*Placeholder*'));
+                        resolve(sysOut('*In progress*'));
                         break;
                     case 'interests':
-                        resolve(sysOut('*Placeholder*'));
+                        resolve(sysOut('*In progress*'));
                         break;
                     default:
                         resolve(sysOut(section + ' is not an option, please try again.'));
