@@ -123,15 +123,13 @@ function createTextSpan(type, text){
 
         newElement.innerHTML += textSplit[1];
     } else if (text.includes('skill{')){
-        setTimeout(function(){
-            let textSplit = text.split('skill{')[1].split(',');
-            let skillName = textSplit[0];
-            let prof = (textSplit[1]).split('}')[0];
+        let textSplit = text.split('skill{')[1].split(',');
+        let skillName = textSplit[0];
+        let prof = (textSplit[1]).split('}')[0];
 
-            let skillBar = newSkill(skillName, prof);
-            newElement.appendChild(skillBar);
-        }, 500);
-
+        let skillBar = newSkill(skillName, prof);
+        newElement.classList.add('pause');
+        newElement.appendChild(skillBar);
     } else {
         newElement.textContent = text;
     }
@@ -201,7 +199,15 @@ function printLine(format, text){
     if (text.constructor === String) {
         let newLine = document.createElement("div");
         let lineText = createTextSpan(format, text);
-        newLine.appendChild(lineText);
+
+        if (lineText.classList.contains('pause')){
+            lineText.classList.remove('pause');
+            setTimeout(function(){
+                newLine.appendChild(lineText);
+            }, 500)
+        } else {
+            newLine.appendChild(lineText);
+        }
 
         cmdOut.appendChild(newLine);
         window.scrollTo(0,document.body.scrollHeight);
