@@ -146,13 +146,15 @@ module.exports = function(app){
                 });
             } else {
                 section = section.toLowerCase();
+                let filters = {};
                 let response = [];
                 switch (section) {
                     case 'summary':
                         resolve(commands.about(null));
                         break;
                     case 'skills':
-                        Skills.find({}, function(err, skillsList){
+                        Skills.find(filters, function(err, skillsList){
+                            // TODO: Format properly
                             skillsList.forEach(function(skill){
                                 response.push('skill{' + skill.skill + ',' + skill.proficiency + '}');
                             });
@@ -160,7 +162,7 @@ module.exports = function(app){
                         });
                         break;
                     case 'experience':
-                        Experience.find({}).sort({end: -1}, function(err, experienceList){
+                        Experience.find(filters, function(err, experienceList){
                             // TODO: Format
                             experienceList.forEach(function(experience){
                                 response.push(experience.position + ' at ' + experience.company);
@@ -169,13 +171,13 @@ module.exports = function(app){
                         });
                         break;
                     case 'education':
-                        Education.find({}).sort({end: -1}, function(err, educationList){
-                            //TODO: Format
+                        Education.find({}, function(err, educationList){
+                            // TODO: Format
                             educationList.forEach(function(education){
                                 response.push(education.degree + ' from ' + education.institution);
                             });
                             resolve(sysOut(response));
-                        });
+                        })
                         break;
                     case 'projects':
                         resolve(sysOut('*Placeholder*'));
