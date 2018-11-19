@@ -36,7 +36,7 @@ function setWindowWidth(){
         charWidth = $char.width(),
         numberOfChars = parseInt(Math.floor($('body').width() / charWidth ).toFixed(), 10);
     $char.remove();
-    windowWidth = numberOfChars-2;
+    windowWidth = Math.min(numberOfChars-2, 102);
 }
 
 function ConsoleInput(type, input) {
@@ -77,7 +77,6 @@ document.addEventListener('keydown', function (e) {
         ctrlDown = true;
     } else if (key === 67) { // C
         if (ctrlDown){
-            console.log("Ctrl + C");
             quickEscape();
         }
     }
