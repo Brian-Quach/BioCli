@@ -129,8 +129,7 @@ function createTextSpan(type, text){
 
         let skillBar = newSkill(skillName, prof);
         newElement.appendChild(skillBar);
-        //newElement.textContent = skillName;
-
+        setTimeout(function(){}, 500);
     } else {
         newElement.textContent = text;
     }
@@ -156,7 +155,7 @@ function newSkill(skill, proficiency){
 
     let currIndex = 0;
     let maxIndex = Math.floor((proficiency/10)*(windowWidth-2)) + 1;
-    let animation = setInterval(frame, 10);
+    let animation = setInterval(frame, 25);
     function frame() {
         if (currIndex >= maxIndex) {
             clearInterval(animation);
