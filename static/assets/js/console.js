@@ -2,6 +2,7 @@ let ctrlDown = false;
 let outputCount = 0;
 let isPrompt = true;
 let currTyping = null;
+let windowWidth;
 
 cmdIn = document.getElementById('cmd_in');
 cmdOut = document.getElementById('output');
@@ -21,10 +22,21 @@ function send(method, url, data, callback){
 }
 window.addEventListener('load', function() {
 
+    setWindowWidth();
     historySetup();
     welcomeMessage();
 
 });
+
+window.addEventListener('resize', setWindowWidth);
+
+function setWindowWidth(){
+    let $char = $('<span>').css({ padding: 0, margin: 0 }).text(String.fromCharCode(160)).appendTo('body'),
+        charWidth = $char.width(),
+        numberOfChars = parseInt(( $('body').width() / charWidth ).toFixed(), 10);
+    $char.remove();
+    windowWidth = numberOfChars;
+}
 
 function ConsoleInput(type, input) {
     this.inputType = type;
@@ -115,8 +127,9 @@ function createTextSpan(type, text){
         let skillName = textSplit[0];
         let prof = (textSplit[1]).split('}')[0];
 
-        newSkill(skillName, prof);
-        newElement.textContent = skillName;
+        let skillBar = newSkill(skillName, prof);
+        newElement.appendChild(skillBar);
+        //newElement.textContent = skillName;
 
     } else {
         newElement.textContent = text;
@@ -130,6 +143,36 @@ function createTextSpan(type, text){
 
 function newSkill(skill, proficiency){
     let skillBar = document.createElement('div');
+    skillBar.classList.add('skillBar');
+
+    let skillName = document.createElement('div');
+    skillName.classList.add('skillName');
+    skillName.innerText = skill;
+
+    let profBar = document.createElement('div');
+    profBar.classList.add('profBar');
+
+    profBar.innerText = '[' + Array(windowWidth-2).join(String.fromCharCode(160)) + ']';
+
+    let currIndex = 0;
+    let maxIndex = Math.floor((proficiency/10)*(windowWidth-2)) + 1;
+    let animation = setInterval(frame, 10);
+    function frame() {
+        if (currIndex >= maxIndex) {
+            clearInterval(animation);
+        } else {
+            currIndex++;
+            profBar.innerText = setCharAt(profBar.innerText, currIndex, '#');
+        }
+    }
+    skillBar.appendChild(skillName);
+    skillBar.appendChild(profBar);
+    return skillBar;
+}
+
+function setCharAt(str, index, chr) {
+    if(index > str.length-1) return str;
+    return str.substr(0,index) + chr + str.substr(index+1);
 }
 
 function processCommand(input){
