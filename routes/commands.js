@@ -146,15 +146,13 @@ module.exports = function(app){
                 });
             } else {
                 section = section.toLowerCase();
-                let filters = {};
                 let response = [];
                 switch (section) {
                     case 'summary':
                         resolve(commands.about(null));
                         break;
                     case 'skills':
-                        Skills.find(filters, function(err, skillsList){
-                            // TODO: Format properly
+                        Skills.find({}, function(err, skillsList){
                             skillsList.forEach(function(skill){
                                 response.push('skill{' + skill.skill + ',' + skill.proficiency + '}');
                             });
@@ -162,7 +160,7 @@ module.exports = function(app){
                         });
                         break;
                     case 'experience':
-                        Experience.find(filters, function(err, experienceList){
+                        Experience.find({}).sort({end: -1}, function(err, experienceList){
                             // TODO: Format
                             experienceList.forEach(function(experience){
                                 response.push(experience.position + ' at ' + experience.company);
@@ -171,8 +169,8 @@ module.exports = function(app){
                         });
                         break;
                     case 'education':
-                        Education.find({}, function(err, educationList){
-                            // TODO: Format
+                        Education.find({}).sort({end: -1}, function(err, educationList){
+                            //TODO: Format
                             educationList.forEach(function(education){
                                 response.push(education.degree + ' from ' + education.institution);
                             });
@@ -191,7 +189,6 @@ module.exports = function(app){
             }
         });
     };
-
 
     commands.help = async function(command = null){
         return new Promise(function(resolve, reject){
