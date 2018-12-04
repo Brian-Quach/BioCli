@@ -110,7 +110,8 @@ module.exports = function(app){
         let returnString;
         if (Object.keys(commands).indexOf(input.command.toLowerCase()) > -1){
 
-            commands[input.command.toLowerCase()].apply(null, input.params).then((output) => {
+            commands[input.command.toLowerCase()].apply(null, input.params).then((output, file) => {
+                if(file) return res.download(file);
                 return res.json(output);
             });
 
