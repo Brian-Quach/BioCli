@@ -138,7 +138,7 @@ module.exports = function(app){
     let commands = {};
 
     commands.get = async function(section = null, args = null){
-        return new Promise(function(resolve){
+        return new Promise(function(resolve, reject){
             if (section === null){
                 Content.findOne({type: 'Get'}, function(err, response){
                     if (err || (response == null)) return resolve("Could not get response.");
@@ -148,7 +148,7 @@ module.exports = function(app){
                 section = section.toLowerCase();
                 let filters = {};
                 let response = [];
-                switch (section) {
+                switch (section.toLowerCase()) {
                     case 'summary':
                         resolve(commands.about(null));
                         break;
@@ -185,13 +185,18 @@ module.exports = function(app){
                                 response.push('');
                             });
                             resolve(sysOut(response));
-                        })
+                        });
                         break;
                     case 'projects':
                         resolve(sysOut('*In progress*'));
                         break;
                     case 'interests':
                         resolve(sysOut('*In progress*'));
+                        break;
+                    case 'pdf':
+                        Content.find({type: 'PDF'}, function(err, fileName){
+                            reject(fileName[0]);
+                        });
                         break;
                     default:
                         resolve(sysOut(section + ' is not an option, please try again.'));
