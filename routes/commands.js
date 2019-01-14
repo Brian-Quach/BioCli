@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const fs = require('fs');
 
 module.exports = function(app){
 
@@ -111,7 +112,9 @@ module.exports = function(app){
         if (Object.keys(commands).indexOf(input.command.toLowerCase()) > -1){
 
             commands[input.command.toLowerCase()].apply(null, input.params).then((output, file) => {
-                if(file) return res.download(file);
+                if(Array.isArray(output) && output[0] == "DL"){
+			return res.redirect('/assets/resume/');
+		} //return res.download(output[1]);
                 return res.json(output);
             });
 
@@ -135,6 +138,16 @@ module.exports = function(app){
     });
 
 
+    app.get('/assets/resume/', function(req, res){
+	Content.find({type: 'PDF'}, function(err, fileName){
+		fs.readFile(fileName[0].value[0], function (err,data){
+     			res.contentType("application/pdf");
+     			return res.send(data);
+  		});
+		// return res.download(fileName[0].value[0]);
+	});
+
+   });
 
     let commands = {};
 
@@ -195,10 +208,9 @@ module.exports = function(app){
                         resolve(sysOut('*In progress*'));
                         break;
                     case 'pdf':
-                        Content.find({type: 'PDF'}, function(err, fileName){
-                            reject(fileName[0]);
-                        });
-                        break;
+			
+                        resolve(sysOut('A PDF version of my resume can be found url{assets/resume/,here!}'));
+			break;
                     default:
                         resolve(sysOut(section + ' is not an option, please try again.'));
                 }

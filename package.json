@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Brian-Quach/BioCli#readme",
   "dependencies": {
     "express": "^4.16.4",
+    "fs": "0.0.1-security",
     "mongo": "^0.1.0",
     "mongodb": "^3.1.9",
     "mongoose": "^5.3.10",
